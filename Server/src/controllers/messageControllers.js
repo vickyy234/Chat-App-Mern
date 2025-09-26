@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import Message from "../models/messageModel.js";
+import cloudinary from "../cloudinary/cloudinary.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -37,25 +38,27 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.body;
+    const { text, base64Image } = req.body;
     const receiverId = req.params.id;
     const senderId = req.user._id;
 
+    let imageURL;
+    if (base64Image) {
+      const uploadResponse = await cloudinary.uploader.upload(base64Image);
+      imageURL = uploadResponse.secure_url;
+    }
     const newMessage = new Message({
       senderId,
       receiverId,
       text,
-      image,
+      image: imageURL,
     });
 
-    if (newMessage) {
-      await newMessage.save();
-      return res
-        .status(201)
-        .json({ message: "Message sent successfully", newMessage });
-    } else {
-      return res.status(400).json({ message: "Failed to send message" });
-    }
+    await newMessage.save();
+
+    return res
+      .status(201)
+      .json({ message: "Message sent successfully", newMessage });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
     console.error("Send message error:", error);

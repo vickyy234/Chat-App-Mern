@@ -35,6 +35,7 @@ const ProfilePage = () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
       updateProfile({ base64Image });
+      setSelectedImg(null);
     };
   };
 
