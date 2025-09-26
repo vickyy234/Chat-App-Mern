@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
+import cloudinary from "../cloudinary/cloudinary.js";
 import generateToken from "../middlewares/generateToken.js";
 
 export const register = async (req, res) => {
@@ -87,11 +88,19 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile picture is required" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { profilePic: base64Image },
-      { new: true }
-    );
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.profilePic) {
+      const publicId = user.profilePic.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(publicId); // Delete old image from Cloudinary
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(base64Image);
+    user.profilePic = uploadResponse.secure_url;
+    const updatedUser = await user.save();
 
     return res
       .status(200)
