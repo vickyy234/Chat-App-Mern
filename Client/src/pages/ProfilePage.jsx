@@ -41,12 +41,12 @@ const ProfilePage = () => {
 
   return (
     <div className="h-screen pt-20">
-      <div className="max-w-2xl mx-auto p-4 py-8">
+      <div className="max-w-2xl p-4 py-8 mx-auto">
         {!showProfile && (
-          <div className="relative bg-base-300 rounded-xl p-6 space-y-8">
+          <div className="relative p-6 space-y-8 bg-base-300 rounded-xl">
             <div className="absolute top-2 right-2">
               <button onClick={() => navigate("/")} title="Close">
-                <X className="size-8 text-zinc-500 hover:scale-110 bg-base-200 hover:text-white rounded-full cursor-pointer transition-transform duration-200" />
+                <X className="transition-transform duration-200 rounded-full cursor-pointer size-8 text-zinc-500 hover:scale-110 bg-base-200 hover:text-white" />
               </button>
             </div>
 
@@ -108,9 +108,9 @@ const ProfilePage = () => {
               </p>
             </div>
 
-            <div className="space-y-6 pb-6 border-b border-zinc-700">
+            <div className="pb-6 space-y-6 border-b border-zinc-700">
               <div className="space-y-1.5">
-                <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm text-zinc-400">
                   <User className="w-4 h-4" />
                   Full Name
                 </div>
@@ -120,7 +120,7 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-1.5">
-                <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <div className="flex items-center gap-2 text-sm text-zinc-400">
                   <Mail className="w-4 h-4" />
                   Email Address
                 </div>
@@ -131,7 +131,7 @@ const ProfilePage = () => {
                       navigator.clipboard.writeText(authUser?.email || "");
                       toast.success("Copied to clipboard!"); // optional
                     }}
-                    className="p-1 hover:bg-base-300 hover:scale-110 rounded-lg transition-transform duration-200 cursor-pointer"
+                    className="p-1 transition-transform duration-200 rounded-lg cursor-pointer hover:bg-base-300 hover:scale-110"
                     title="Copy to clipboard"
                   >
                     <Copy className="w-4 h-4 text-zinc-500 hover:text-white" />
@@ -140,13 +140,13 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            <div className="bg-base-300 rounded-xl px-6">
-              <h2 className="text-lg font-medium  mb-4">Account Information</h2>
+            <div className="px-6 bg-base-300 rounded-xl">
+              <h2 className="mb-4 text-lg font-medium">Account Information</h2>
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between py-2">
                   <span>Member Since</span>
                   <span
-                    className="text-blue-500 hover:scale-110 transition-transform duration-200 cursor-pointer"
+                    className="text-blue-500 transition-transform duration-200 cursor-pointer hover:scale-110"
                     title={authUser.createdAt?.split("T")[0]}
                   >
                     {authUser.createdAt?.split("T")[0]}
@@ -155,7 +155,7 @@ const ProfilePage = () => {
                 <div className="flex items-center justify-between py-2">
                   <span>Account Status</span>
                   <span
-                    className="text-green-500 hover:scale-110 transition-transform duration-200 cursor-pointer"
+                    className="text-green-500 transition-transform duration-200 cursor-pointer hover:scale-110"
                     title="Active"
                   >
                     Active
@@ -167,25 +167,25 @@ const ProfilePage = () => {
         )}
 
         {showProfile && (
-          <div className="absolute top-50 z-100 flex bg-base-300 rounded-xl p-6 max-h-75 max-w-75 items-center justify-center mx-auto left-0 right-0">
+          <div className="absolute left-0 right-0 flex items-center justify-center p-6 mx-auto top-50 z-100 bg-base-300 rounded-xl max-h-75 max-w-75">
             <div
-              className="absolute top-2 right-2 bg-base-100 rounded-full cursor-pointer hover:scale-110 transition-transform duration-200"
+              className="absolute transition-transform duration-200 rounded-full cursor-pointer top-2 right-2 bg-base-100 hover:scale-110"
               title="Close"
             >
               <X
-                className="size-7 text-zinc-500  hover:text-white "
+                className="size-7 text-zinc-500 hover:text-white "
                 onClick={() => setShowProfile(false)}
               />
             </div>
             <img
               src={authUser.profilePic || "/avatar.png"}
               alt="profile"
-              className="w-50 h-50 object-cover rounded-full"
+              className="object-cover rounded-full w-50 h-50"
             />
 
             <a
               href={authUser.profilePic}
-              className="absolute bottom-2 right-2 bg-base-100 rounded-full p-2 transition-transform duration-200 cursor-pointer hover:scale-110"
+              className="absolute p-2 transition-transform duration-200 rounded-full cursor-pointer bottom-2 right-2 bg-base-100 hover:scale-110"
               download="profile"
               title="Download"
             >

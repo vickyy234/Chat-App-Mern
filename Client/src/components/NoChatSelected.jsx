@@ -2,11 +2,11 @@ import React from "react";
 import { Send } from "lucide-react";
 const NoChatSelected = () => {
   return (
-    <div className="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
-      <div className="max-w-md text-center space-y-6">
+    <div className="flex flex-col items-center justify-center flex-1 w-full p-16 bg-base-100/50">
+      <div className="max-w-md space-y-6 text-center">
         <div className="relative">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-bounce">
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 animate-bounce">
               <Send className="w-8 h-8 text-primary hover:text-primary/50" />
             </div>
           </div>
