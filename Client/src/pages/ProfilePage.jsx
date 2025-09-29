@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, Copy, Download, Mail, User, X } from "lucide-react";
+import { Camera, Copy, Download, Loader, Mail, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
@@ -8,6 +8,7 @@ const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
   const navigate = useNavigate();
 
   const handleImageUpload = async (e) => {
@@ -35,7 +36,6 @@ const ProfilePage = () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
       updateProfile({ base64Image });
-      setSelectedImg(null);
     };
   };
 
@@ -46,7 +46,7 @@ const ProfilePage = () => {
           <div className="relative bg-base-300 rounded-xl p-6 space-y-8">
             <div className="absolute top-2 right-2">
               <button onClick={() => navigate("/")} title="Close">
-                <X className="size-8 text-zinc-500 hover:scale-110 hover:bg-base-200 hover:text-white rounded-full cursor-pointer transition-transform duration-200" />
+                <X className="size-8 text-zinc-500 hover:scale-110 bg-base-200 hover:text-white rounded-full cursor-pointer transition-transform duration-200" />
               </button>
             </div>
 
@@ -61,16 +61,22 @@ const ProfilePage = () => {
                 <img
                   src={selectedImg || authUser.profilePic || "/avatar.png"}
                   alt="Profile"
-                  className="size-32 rounded-full object-cover border-4 cursor-pointer transition-transform duration-200 hover:scale-105"
-                  loading="smooth"
+                  className={`size-32 rounded-full object-cover border-4 cursor-pointer transition-transform duration-200 hover:scale-105 ${
+                    isImageLoading ? "opacity-50" : "opacity-100"
+                  }`}
                   onClick={() => {
                     if (authUser.profilePic) {
                       setShowProfile(true);
                     }
                   }}
+                  onLoad={() => setIsImageLoading(false)}
                   title={authUser.profilePic ? "View Profile Picture" : null}
-                  disabled={authUser.profilePic}
                 />
+                {isImageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full">
+                    <Loader className="size-10 animate-spin" />
+                  </div>
+                )}
                 <label
                   htmlFor="avatar-upload"
                   className={`
@@ -163,11 +169,11 @@ const ProfilePage = () => {
         {showProfile && (
           <div className="absolute top-50 z-100 flex bg-base-300 rounded-xl p-6 max-h-75 max-w-75 items-center justify-center mx-auto left-0 right-0">
             <div
-              className="absolute top-2 right-2 bg-base-100 rounded-full cursor-pointer hover:scale-110"
+              className="absolute top-2 right-2 bg-base-100 rounded-full cursor-pointer hover:scale-110 transition-transform duration-200"
               title="Close"
             >
               <X
-                className="size-7 text-zinc-500  hover:text-white transition-transform duration-200"
+                className="size-7 text-zinc-500  hover:text-white "
                 onClick={() => setShowProfile(false)}
               />
             </div>
@@ -183,7 +189,7 @@ const ProfilePage = () => {
               download="profile"
               title="Download"
             >
-              <Download className="size-6 text-zinc-500 hover:text-white " />
+              <Download className="size-6 text-zinc-500 hover:text-white" />
             </a>
           </div>
         )}
