@@ -2,18 +2,16 @@ import { create } from "zustand";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const ChatStore = create((set) => ({
+export const ChatStore = create((set, get) => ({
   users: [],
   messages: [],
-  selectedUser: null,
-  isUsersLoading: false,
-  isMessagesLoading: false,
 
+  isUsersLoading: false,
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await axios.get("/messagges/getUsers");
-      set({ users: res.data });
+      const res = await axios.get("/messages/getUsers");
+      set({ users: res.data.users });
     } catch (error) {
       toast.error(error.response.data?.message);
     } finally {
@@ -21,11 +19,12 @@ export const ChatStore = create((set) => ({
     }
   },
 
+  isMessagesLoading: false,
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
     try {
       const res = await axios.get(`/messages/${userId}`);
-      set({ messages: res.data });
+      set({ messages: res.data.messages });
     } catch (error) {
       toast.error(error.response.data?.message);
     } finally {
@@ -33,7 +32,25 @@ export const ChatStore = create((set) => ({
     }
   },
 
+  isMessagesSending: false,
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+    set({ isMessagesSending: true });
+    try {
+      const res = await axios.post(
+        `/messages/send/${selectedUser._id}`,
+        messageData
+      );
+      set({ messages: [...messages, res.data.newMessage] });
+    } catch (error) {
+      toast.error(error.response.data?.message);
+    } finally {
+      set({ isMessagesSending: false });
+    }
+  },
+
+  selectedUser: null,
   setSelectedUser: (user) => {
-    set({ selectedUser: user, messages: [] }); 
+    set({ selectedUser: user });
   },
 }));

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
-import { useAuthStore } from "./store/useAuthStore";
+import { AuthStore } from "./store/useAuthStore";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
@@ -10,7 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = AuthStore();
   const [showServerWakeMessage, setShowServerWakeMessage] = useState(false);
 
   useEffect(() => {

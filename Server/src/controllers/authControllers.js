@@ -98,7 +98,11 @@ export const updateProfile = async (req, res) => {
       await cloudinary.uploader.destroy(publicId); // Delete old image from Cloudinary
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(base64Image);
+    const uploadResponse = await cloudinary.uploader.upload(base64Image, {
+      folder: "Wave_Profile_Pics",
+      format: "jpg",
+      overwrite: true,
+    });
     user.profilePic = uploadResponse.secure_url;
     const updatedUser = await user.save();
 

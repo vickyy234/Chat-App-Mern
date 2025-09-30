@@ -2,7 +2,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail, Send } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuthStore } from "../store/useAuthStore";
+import { AuthStore } from "../store/useAuthStore";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +10,7 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn } = AuthStore();
 
   const validateForm = () => {
     if (!formData.email.trim()) return toast.error("Email is required");
@@ -44,7 +44,7 @@ const LoginPage = () => {
             <p className="text-base-content/60">Sign in to your account</p>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-control">
             <label className="label">
@@ -74,7 +74,7 @@ const LoginPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 className={`input input-bordered w-full pl-10`}
-                placeholder={showPassword ?"123456": "••••••••"}
+                placeholder={showPassword ? "123456" : "••••••••"}
                 value={formData.password}
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })

@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { LogOut, Send, Settings, User } from "lucide-react";
-import { useAuthStore } from "../store/useAuthStore";
+import { AuthStore } from "../store/useAuthStore";
 
 const Navbar = () => {
-  const { logout, authUser } = useAuthStore();
+  const { logout, authUser } = AuthStore();
 
   return (
     <header className="fixed top-0 z-40 w-full shadow-md bg-base-100">

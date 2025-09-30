@@ -2,13 +2,12 @@ import { useState } from "react";
 import { Camera, Copy, Download, Loader, Mail, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { useAuthStore } from "../store/useAuthStore";
+import { AuthStore } from "../store/useAuthStore";
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const { authUser, isUpdatingProfile, updateProfile } = AuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [isImageLoading, setIsImageLoading] = useState(true);
   const navigate = useNavigate();
 
   const handleImageUpload = async (e) => {
@@ -58,25 +57,23 @@ const ProfilePage = () => {
             {/* avatar upload section */}
             <div className="flex flex-col items-center gap-4">
               <div className="relative">
+                <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-opacity-20">
+                  <span className="loading loading-ring loading-md"></span>
+                </div>
                 <img
                   src={selectedImg || authUser.profilePic || "/avatar.png"}
                   alt="Profile"
-                  className={`size-32 rounded-full object-cover border-4 cursor-pointer transition-transform duration-200 hover:scale-105 ${
-                    isImageLoading ? "opacity-50" : "opacity-100"
-                  }`}
+                  className="object-cover transition-transform duration-200 border-4 rounded-full cursor-pointer size-32 hover:scale-105"
                   onClick={() => {
                     if (authUser.profilePic) {
                       setShowProfile(true);
                     }
                   }}
-                  onLoad={() => setIsImageLoading(false)}
+                  onLoad={(e) =>
+                    (e.target.previousSibling.style.display = "none")
+                  }
                   title={authUser.profilePic ? "View Profile Picture" : null}
                 />
-                {isImageLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full">
-                    <Loader className="size-10 animate-spin" />
-                  </div>
-                )}
                 <label
                   htmlFor="avatar-upload"
                   className={`
@@ -177,10 +174,14 @@ const ProfilePage = () => {
                 onClick={() => setShowProfile(false)}
               />
             </div>
+            <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-opacity-20">
+              <span className="loading loading-ring loading-lg"></span>
+            </div>
             <img
               src={authUser.profilePic || "/avatar.png"}
               alt="profile"
               className="object-cover rounded-full w-50 h-50"
+              onLoad={(e) => (e.target.previousSibling.style.display = "none")}
             />
 
             <a

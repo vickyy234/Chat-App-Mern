@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2, Lock, Mail, Send, User } from "lucide-react";
-import { useAuthStore } from "../store/useAuthStore";
+import { AuthStore } from "../store/useAuthStore";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,11 +12,13 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const { signUp, isSigningUp } = useAuthStore();
+  const { signUp, isSigningUp } = AuthStore();
   const validateForm = () => {
     if (!formData.name.trim()) return toast.error("Full name is required");
-    if (formData.name.length < 3) return toast.error("Full name must be at least 3 characters");
-    if (formData.name.length > 30) return toast.error("Full name must be at most 30 characters");
+    if (formData.name.length < 3)
+      return toast.error("Full name must be at least 3 characters");
+    if (formData.name.length > 30)
+      return toast.error("Full name must be at most 30 characters");
 
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))

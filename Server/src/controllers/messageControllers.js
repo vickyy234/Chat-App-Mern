@@ -44,7 +44,11 @@ export const sendMessage = async (req, res) => {
 
     let imageURL;
     if (base64Image) {
-      const uploadResponse = await cloudinary.uploader.upload(base64Image);
+      const uploadResponse = await cloudinary.uploader.upload(base64Image, {
+        folder: "Wave_Chat_Images",
+        format: "jpg",
+        overwrite: true,
+      });
       imageURL = uploadResponse.secure_url;
     }
     const newMessage = new Message({
