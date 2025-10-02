@@ -3,10 +3,14 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import http from "http";
 import authRoutes from "./src/routes/authRoutes.js";
 import messageRoutes from "./src/routes/messageRoutes.js";
+import { initSocket } from "./src/lib/socket.js";
 dotenv.config();
-import { app, server } from "./src/lib/socket.js";
+
+const app = express();
+const server = http.createServer(app);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -20,6 +24,8 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
+
+const io = initSocket(server, process.env.CLIENT_URL);
 
 // Server setup + MongoDB connection
 server.listen(process.env.PORT, async () => {
