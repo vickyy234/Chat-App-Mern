@@ -17,7 +17,7 @@ const ChatHeader = () => {
                 <span className="loading loading-ring loading-xs"></span>
               </div>
               <img
-                src={selectedUser.profilePic}
+                src={selectedUser.profilePic || "./avatar.png"}
                 alt={selectedUser.name}
                 onLoad={(e) =>
                   (e.target.previousSibling.style.display = "none")
