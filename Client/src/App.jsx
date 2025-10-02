@@ -24,7 +24,7 @@ const App = () => {
       sessionStorage.setItem("serverMessageShown", "true");
     };
     checkUserAuth();
-  }, []);
+  }, [checkAuth]);
 
   if (isCheckingAuth && !authUser) {
     return (

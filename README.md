@@ -32,6 +32,8 @@ A full-stack Chat Application build using the MERN stack with real-time messagin
 
 - MongoDB with Mongoose
 
+- WebSocket for realtime messaging
+
 - JWT for authentication
 
 - cookie-parser for cookie handling
@@ -42,15 +44,15 @@ A full-stack Chat Application build using the MERN stack with real-time messagin
 
 - Tailwind CSS and daisyUI for styling
 
-- axios
+- axios for API calls
 
 ### 🚀 Deployment & Tools
 
-- Vercel
+- Vercel (frontend)
 
-- Render
+- Render (backend)
 
-- Postman
+- Postman (API testing tool)
 
 ---
 

@@ -70,6 +70,7 @@ const MessageInput = () => {
               className={`object-cover w-20 h-20 rounded-lg border-zinc-700 ${
                 isMessagesSending ? "animate-pulse" : ""
               }`}
+              title={`${isMessagesSending ? "Uploading" : ""}`}
             />
             <button
               onClick={removeImage}
@@ -105,11 +106,12 @@ const MessageInput = () => {
             className={`hidden btn btn-circle sm:flex ${
               image ? "text-emerald-500" : "text-zinc-400"
             }`}
+            title="media"
           >
             <Image size={20} />
           </button>
         </div>
-        <div title={`${isMessagesSending ? "Sending..." : ""}`}>
+        <div title={`${isMessagesSending ? "Sending..." : "send"}`}>
           <button
             type="submit"
             className="btn btn-sm btn-circle"
