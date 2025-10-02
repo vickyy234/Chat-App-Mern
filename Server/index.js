@@ -21,11 +21,12 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());
+const io = initSocket(server, process.env.CLIENT_URL);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
-const io = initSocket(server, process.env.CLIENT_URL);
 
 // Server setup + MongoDB connection
 server.listen(process.env.PORT, async () => {
