@@ -21,8 +21,7 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors());
-const io = initSocket(server, process.env.CLIENT_URL);
+initSocket(server, process.env.CLIENT_URL);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

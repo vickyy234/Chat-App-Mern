@@ -26,7 +26,6 @@ export function initSocket(server, CLIENT_URL) {
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
   });
-  return io;
 }
 
 export function getReceiverSocketId(userId) {
