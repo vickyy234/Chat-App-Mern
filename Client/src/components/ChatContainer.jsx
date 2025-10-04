@@ -89,7 +89,7 @@ const ChatContainer = () => {
                 })}
               </time>
             </div>
-            <div className="flex flex-col chat-bubble">
+            <div className="flex flex-col chat-bubble max-w-[80%] break-words">
               {message.image && (
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center bg-opacity-20">

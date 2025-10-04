@@ -42,7 +42,7 @@ const MessageInput = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!text.trim() && !image) {
+    if ((!text.trim() && !image) || isMessagesSending) {
       toast.error("Message cannot be empty");
       return;
     }
