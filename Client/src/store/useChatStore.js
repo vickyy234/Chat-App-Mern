@@ -56,16 +56,31 @@ export const ChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-
     const socket = AuthStore.getState().socket;
 
-    if (selectedUser)
-      socket.on("newMessage", (newMessage) => {
-        if (newMessage.senderId !== selectedUser._id) return;
-        set({ messages: [...get().messages, newMessage] });
-      });
+    socket.on("newMessage", (newMessage) => {
+      const { selectedUser, users, messages } = get();
+
+      const updatedUsers = users.map((user) =>
+        user._id === newMessage.senderId || user._id === newMessage.receiverId
+          ? {
+              ...user,
+              lastMessage: newMessage.text || "📷 Image",
+              lastMessageAt: newMessage.createdAt,
+            }
+          : user
+      );
+
+      set({ users: updatedUsers });
+
+      if (
+        selectedUser &&
+        (newMessage.senderId === selectedUser._id ||
+          newMessage.receiverId === selectedUser._id)
+      ) {
+        set({ messages: [...messages, newMessage] });
+      }
+    });
   },
 
   unsubscribeFromMessages: () => {

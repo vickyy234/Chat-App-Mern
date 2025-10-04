@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import Message from "../models/messageModel.js";
+import Chat from "../models/chatModel.js";
 import cloudinary from "../lib/cloudinary.js";
 import { io, getReceiverSocketId } from "../lib/socket.js";
 
@@ -9,7 +10,26 @@ export const getUsers = async (req, res) => {
     const users = await User.find({ _id: { $ne: LoggedUserId } }).select(
       "-password"
     );
-    res.status(200).json({ message: "Users fetched successfully", users });
+
+    const chats = await Chat.find({
+      participants: { $in: [LoggedUserId] },
+    });
+
+    const usersWithChatInfo = users.map((user) => {
+      const chat = chats.find((chat) =>
+        chat.participants.some((p) => p.toString() === user._id.toString())
+      );
+      return {
+        ...user.toObject(),
+        lastMessage: chat ? chat.lastMessage : null,
+        lastMessageAt: chat ? chat.updatedAt : null,
+      };
+    });
+
+    res.status(200).json({
+      message: "Users fetched successfully",
+      users: usersWithChatInfo,
+    });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
     console.error("Get users error:", error);
@@ -61,14 +81,29 @@ export const sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    const receiverSocketId = getReceiverSocketId(receiverId);
-    if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+    let chat = await Chat.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
+
+    if (!chat) {
+      chat = new Chat({
+        participants: [senderId, receiverId],
+        lastMessage: newMessage.text || "📷 Image",
+      });
+    } else {
+      chat.lastMessage = newMessage.text || "📷 Image";
     }
-    
+    await chat.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    const senderSocketId = getReceiverSocketId(senderId);
+    if (receiverSocketId) {
+      io.to([receiverSocketId, senderSocketId]).emit("newMessage", newMessage);
+    }
+
     return res
       .status(201)
-      .json({ message: "Message sent successfully", newMessage});
+      .json({ message: "Message sent successfully", newMessage });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
     console.error("Send message error:", error);

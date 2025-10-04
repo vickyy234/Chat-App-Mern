@@ -5,8 +5,7 @@ import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
 
 const Sidebar = () => {
-  const { getUsers, users, isUsersLoading } = ChatStore();
-  const { selectedUser, setSelectedUser } = ChatStore();
+  const { getUsers, isUsersLoading, setSelectedUser, users, selectedUser } = ChatStore();
 
   const { onlineUsers } = AuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -14,7 +13,7 @@ const Sidebar = () => {
   useEffect(() => {
     getUsers();
   }, [getUsers]);
-
+  
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
@@ -77,10 +76,26 @@ const Sidebar = () => {
               )}
             </div>
 
-            <div className="hidden text-left lg:block">
+            <div className="hidden text-left lg:block w-7/9">
               <div className="font-medium truncate">{user.name}</div>
               <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                <div className="flex items-center justify-between w-full">
+                  <span className="truncate" title={user.lastMessage}>
+                    {user.lastMessage}
+                  </span>
+                  {user.lastMessageAt && (
+                    <time className="ml-2 text-xs text-zinc-500">
+                      {new Date(user.lastMessageAt).toLocaleTimeString(
+                        "en-US",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        }
+                      )}
+                    </time>
+                  )}
+                </div>
               </div>
             </div>
           </button>
